@@ -1,0 +1,15 @@
+h1 {
+	"Times New Roman", Times, serif;
+	border-style: solid;
+    border-width: 2px;
+    border-color: black;
+    text-align: center;
+    padding: 4px;
+}
+h2 {"Times New Roman", Times, serif;}
+h3 {"Times New Roman", Times, serif;}
+p {"Times New Roman", Times, serif;}
+
+body {
+    font-size: 12pt;
+}
