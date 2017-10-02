@@ -1,10 +1,18 @@
+<!--
+  file:///Users/ShihTingHuang/Documents/01_SCHOOL/04_Co-op/website/index.html
+  the link
+//-->
+
+<!-- http://htmldog.com/guides/html/intermediate/ -->
+
 <html>
 
   <head>
     <title> CompGeo Project </title> <!-- web page title-->
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.14/p5.js"></script>
-    <script src="sketch.js"></script>
+    <script src="https://rawgit.com/lmccart/p5.js/master/lib/addons/p5.dom.js"></script>
+    <!-- <script src="sketch.js"></script> -->
     <script type="application/javascript;version=1.7"/></script>
   </head>
 
@@ -17,7 +25,7 @@
       <h2> Description of the project:</h2>
     </div>
     <p>
-      In this project, I will create an interactive pedagogical aid of <strong>Delaunay Triangulations</strong>. The visualization will show how the <a href="#fortAlg">Fortune's algorithm</a> works on a set of random points.<br>
+      In this project, I will create an interactive pedagogical aid of <a href="#deTri">Delaunay Triangulations</a>. The visualization will show how the <a href="#incre">incremental method</a> works on a set of random points.<br>
       <!--
       Algorithm approach:
       <a href="#incre">incremental</a>,-
@@ -55,27 +63,81 @@
       <h2> Background information and approach: </h2>
     </div>
 
-    <ol>
-      <!--<h3 id="incre"><li> Incremental </li></h3>
+    <ul>
+      <h3 id="deTri"><li> Delaunay Triangulations </li></h3>
+      <p>
+        Delaunay triangulations maximize the minimum angle of all the angles of the triangles in the triangulation, and tend to avoid sliver triangles. 
+      </p>
+      <h3 id="incre"><li> Incremental Method</li></h3>
+      <p>
+        The algorithm is randomized incremental, so it adds the points in random order and it maintains a Delaunay triangulation of the current point set. 
+      </p>
+      <!-- <h3 id="divAndCon"><li> Divide and Conquer </li></h3>
         <p>
           TBD
         </p>
-      <h3 id="divAndCon"><li> Divide and Conquer </li></h3>
-        <p>
-          TBD
-        </p>-->
       <h3 id="fortAlg"><li> Fortune's Algorithm </li></h3>
         <p>
           TBD
-        </p>
+        </p> -->
 
-    </ol>
+    </ul>
 
     <div style="background-color:#E8E8E8;">
       <h2> Pseudo-code: </h2>
     </div>
     <p>
-      TBD<br>
+    <h3> DelaunayTriangulation(P) </h3>
+    Input: A set P of n+1 points in the plane.<br>
+    Output: A Delaunay triangulation of P. <br>
+    <ol>
+      <li>Let p<sub>0</sub> be the lexicographically highest point of P, the rightmost among the points with largest y-coordinate.</li>
+
+      <li> Let p<sub>-1</sub> and p<sub>-2</sub> be two points far away and such that P is contained in the triangle p<sub>0</sub> p<sub>-1</sub> p<sub>-2</sub>. </li>
+
+      <li> Initialize D(P) as the triangulation consisting of the single triangle p<sub>0</sub> p<sub>-1</sub> p<sub>-2</sub>.</li>
+
+      <li> Compute a random permutation p<sub>1</sub>, p<sub>2</sub>, ..., p<sub>n</sub> of P\{p<sub>0</sub>}. </li>
+
+      <li> <strong>for</strong> r &larr; (1 to n) <strong>do</strong> </li>
+
+      <li> &nbsp;&nbsp;Find a triangle p<sub>i</sub> p<sub>j</sub> p<sub>k</sub> which contains p<sub>r</sub></li>
+
+      <li> &nbsp;&nbsp; <strong>if</strong> (p<sub>r</sub> lies in the interior of p<sub>i</sub> p<sub>j</sub> p<sub>k</sub>): </li>
+
+
+      <li> &nbsp;&nbsp;&nbsp;&nbsp; Add edges from pr to the three vertices of p<sub>i</sub> p<sub>j</sub> p<sub>k</sub>, splitting p<sub>i</sub> p<sub>j</sub> p<sub>k</sub> into three triangles.</li>
+
+      <li> &nbsp;&nbsp;&nbsp;&nbsp; ValidEdge(p<sub>r</sub>, p<sub>i</sub>p<sub>j</sub>, D(p)) </li>
+      <li> &nbsp;&nbsp;&nbsp;&nbsp; ValidEdge(p<sub>r</sub>, p<sub>j</sub>p<sub>k</sub>, D(p)) </li>
+      <li> &nbsp;&nbsp;&nbsp;&nbsp; ValidEdge(p<sub>r</sub>, p<sub>k</sub>p<sub>i</sub>, D(p)) </li>
+
+      <li> &nbsp;&nbsp;&nbsp;&nbsp; <strong>else</strong>: (p<sub>r</sub> lies on an edge of p<sub>i</sub> p<sub>j</sub> p<sub>k</sub>, say the edge p<sub>i</sub>p<sub>j</sub>) </li>
+
+      <li> &nbsp;&nbsp;&nbsp;&nbsp; Add edges from p<sub>r</sub> to p<sub>k</sub> and to the third vertex p<sub>l</sub> of the other triangle that is incident to p<sub>i</sub> p<sub>j</sub> , splitting the two triangles incident to p<sub>i</sub> p<sub>j</sub> into four triangles. </li>
+
+      <li> &nbsp;&nbsp;&nbsp;&nbsp; ValidEdge(p<sub>r</sub>, p<sub>i</sub>p<sub>l</sub>, D(p)) </li>
+      <li> &nbsp;&nbsp;&nbsp;&nbsp; ValidEdge(p<sub>r</sub>, p<sub>l</sub>p<sub>j</sub>, D(p)) </li>
+      <li> &nbsp;&nbsp;&nbsp;&nbsp; ValidEdge(p<sub>r</sub>, p<sub>j</sub>p<sub>k</sub>, D(p)) </li>
+      <li> &nbsp;&nbsp;&nbsp;&nbsp;ValidEdge(p<sub>r</sub>, p<sub>k</sub>p<sub>i</sub>, D(p)) </li>
+
+      <li> &nbsp;&nbsp; <strong>end if</strong> </li>
+      <li> <strong>end for</strong> </li>
+      <li> Delete all triangles containing p<sub>-1</sub> and p<sub>-2</sub> as vertices from D(P).</li>
+      <li> <strong>return</strong> D(P)</li>
+    </ol>
+    <br>
+    <h3> ValidEdge(p<sub>r</sub>, p<sub>i</sub>p<sub>j</sub>, D(p)) </h3>
+
+    <ol>
+      <li> <strong>if</strong> p<sub>i</sub>p<sub>j</sub> is illegal:
+        (Edge p<sub>i</sub>p<sub>j</sub> is incident to triangles p<sub>r</sub>p<sub>i</sub>p<sub>j</sub> and p<sub>i</sub>p<sub>j</sub>p<sub>k</sub>, and let C be the circle through p<sub>i</sub>, p<sub>j</sub>, and p<sub>r</sub>. The edge p<sub>i</sub>p<sub>j</sub> is illegal iff the point p<sub>k</sub> lies in the interior of C.)</li>
+      <li> &nbsp;&nbsp; Let p<sub>i</sub> p<sub>j</sub> p<sub>k</sub> be the triangle adjacent to p<sub>r</sub> p<sub>i</sub> p<sub>j</sub> along p<sub>i</sub> p<sub>j</sub>  </li>
+      <li> &nbsp;&nbsp; Replace p<sub>i</sub>p<sub>j</sub> with p<sub>r</sub>p<sub>k</sub> </li>
+      <li> &nbsp;&nbsp; ValidEdge(p<sub>r</sub>, p<sub>i</sub>p<sub>k</sub>, D(p))  </li>
+      <li> &nbsp;&nbsp; ValidEdge(p<sub>r</sub>, p<sub>k</sub>p<sub>j</sub>, D(p))  </li>
+      <li> <strong> end if </strong> </li>
+    </ol>
     </p>
 
     <div style="background-color:#E8E8E8;">
@@ -86,9 +148,18 @@
     </p>
 
     <div style="background-color:#E8E8E8;">
-      <h2> Demo: </h2>
+      <h2> <a href="demo.html">Demo</a> </h2>
     </div>
     <p>
+      <!--
+      <input type="value" id="number">
+      <input type="button" value="Submit" onclick="initial()">
+      <script src="sketch.js">
+      function initial(){
+        var num=document.getElementById('number').value;
+      }
+      </script>
+      -->
     </p>
 
 
