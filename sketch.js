@@ -1,11 +1,15 @@
 // algorithm functionable!!!
+// modified helper triangle size
+// add speed up/ speed down
+// add prev function
 
-var input, button, button2, button3, button4, button5;
+var input, button, button2, button3, button4, button5, button6, button7;
 var margin = 10;
 var points;
 var highest;
 var p0, p1, p2, pr;
 var fps = 0;
+var prev_fps=3;
 var checked = [], unchecked = [], edges = [];
 var width = 600, height = 600;
 var triangles = [];
@@ -18,11 +22,23 @@ var step_unchecked = [];
 var step_edges = [];
 var step_swap = [];
 var step_point = [];
-var prev_edge = [];
+// var prev_edge = [];
 var step_circle = [];
 var helper = [];
 var step_d = [];
 var step_line = [];
+
+var prev_step_checked = [];
+var prev_step_unchecked = [];
+var prev_step_edges = [];
+var prev_step_swap = [];
+var prev_step_point = [];
+// var prev_prev_edge = [];
+var prev_step_circle = [];
+// var prev_helper = [];
+var prev_step_d = [];
+var prev_step_line = [];
+
 function setup(){
 	
 
@@ -36,32 +52,39 @@ function setup(){
 	button.mousePressed(initial);
 
 	button2 = createButton('Pulse');
-	button2.position(width + margin , input.height + margin + button.height + margin);
+	button2.position(width + margin , (input.height + margin) * 2);
 	button2.mousePressed(pulse);
 
 	button3 = createButton('Start');
-	button3.position(width + margin , input.height + margin + button.height + margin + button.height + margin);
+	button3.position(width + margin , (input.height + margin) * 3);
 	button3.mousePressed(start);
 
-	// button4 = createButton('Prev<<');
-	// button4.position(width + margin , 
-	// 	input.height + margin + button.height + margin + button.height + margin + button.height + margin);
-	// button4.mousePressed(prev);
+	button4 = createButton('Prev<<');
+	button4.position(width + margin , (input.height + margin) * 4);
+	button4.mousePressed(prev);
 	
 	button5 = createButton('Next>>');
-	button5.position(width + margin , 
-		input.height + margin + button.height + margin + button.height + margin + button.height + margin + button.height + margin);
+	button5.position(width + margin , (input.height + margin) * 5);
 	button5.mousePressed(next);
+
+	button6 = createButton('Speed down');
+	button6.position(width + margin , (input.height + margin) * 6);
+	button6.mousePressed(speedDown);
+
+	button7 = createButton('Speed up');
+	button7.position(width + margin , (input.height + margin) * 7);
+	button7.mousePressed(speedUp);
 
 }
 
 
 function draw() {
 	frameRate(fps);
+	// frameRate(button4.value());
 	background(0);
 	
 
-	if (steps > 0) {
+	if (step_unchecked.length > 0) {
 		console.log("THIS STEPS", steps);
 		steps--;
 
@@ -70,6 +93,7 @@ function draw() {
 		stroke(255, 255, 255, 100);
 		strokeWeight(10);
 		this_step_unchecked = step_unchecked.shift();
+		prev_step_unchecked.push(this_step_unchecked);
 		for (var i=0; i < this_step_unchecked.length; i++) {
 			point(this_step_unchecked[i][0], this_step_unchecked[i][1]);
 		}
@@ -78,23 +102,16 @@ function draw() {
 		strokeWeight(1);
 		stroke(255, 255, 0);
 		this_step_edges = step_edges.shift();
+		prev_step_edges.push(this_step_edges);
 		for (var i=0; i < this_step_edges.length; i++) {
 			line(this_step_edges[i][0][0], this_step_edges[i][0][1], this_step_edges[i][1][0], this_step_edges[i][1][1]);
-		}
-
-		// draw swap edge
-		strokeWeight(3);
-		stroke(255, 0, 0);
-		this_step_swap = step_swap.shift();
-		if (this_step_swap.length > 0) {
-			line(this_step_swap[0][0], this_step_swap[0][1], this_step_swap[1][0], this_step_swap[1][1]);
-		}
-		
+		}		
 
 		// draw checked points
 		stroke(255, 255, 0);
 		strokeWeight(10);
 		this_step_checked = step_checked.shift();
+		prev_step_checked.push(this_step_checked);
 		for (var i=0; i < this_step_checked.length; i++) {
 			point(this_step_checked[i][0], this_step_checked[i][1]);
 		}
@@ -103,17 +120,23 @@ function draw() {
 		stroke(255, 0, 0);
 		strokeWeight(15);
 		this_step_point = step_point.shift();
+		prev_step_point.push(this_step_point);
 		point(this_step_point[0], this_step_point[1]);
 
 		this_step_d = step_d.shift();
+		prev_step_d.push(this_step_d);
 		if (this_step_d.length > 0) {
 			strokeWeight(15);
 			point(this_step_d[0], this_step_d[1]);
+			// textSize(32);
+			// fill(0, 102, 153);
+			// text("Illegal", this_step_d[0], this_step_d[1]);
 		}
 
 		fill(204, 101, 192, 127);
 		noStroke();
 		this_step_line = step_line.shift();
+		prev_step_line.push(this_step_line);
 		triangle(this_step_point[0], this_step_point[1], this_step_line[0][0], this_step_line[0][1], this_step_line[1][0], this_step_line[1][1]);	
 
 		// noFill();
@@ -123,7 +146,23 @@ function draw() {
 		noFill();
 		strokeWeight(3);
 		this_step_circle = step_circle.shift();
+		prev_step_circle.push(this_step_circle);
 		ellipse(this_step_circle[0][0], this_step_circle[0][1], this_step_circle[1])
+
+				// draw swap edge
+		strokeWeight(3);
+		stroke(255, 0, 0);
+		this_step_swap = step_swap.shift();
+		prev_step_swap.push(this_step_swap);
+		if (this_step_swap.length > 0) {
+			line(this_step_swap[0][0], this_step_swap[0][1], this_step_swap[1][0], this_step_swap[1][1]);
+			textSize(20);
+			// fill(0, 102, 153);
+			fill(100, 200, 255);
+			noStroke();
+			textAlign(CENTER);
+			text("Flip", (this_step_swap[0][0]+this_step_swap[1][0])/2, (this_step_swap[0][1]+this_step_swap[1][1])/2);
+		}
 
 
 	} else {
@@ -200,15 +239,24 @@ function draw() {
 					console.log("THIS mouse_circle_center", mouse_circle_center);
 					var mouse_circle_r = distant(mouse_circle_center, mouse_circle[0]);
 					console.log("THIS mouse_circle_r", mouse_circle_r);
+					
+					// circle
 					stroke(255, 0, 0, 127);
 					noFill();
 					strokeWeight(3);
 					ellipse(mouse_circle_center[0], mouse_circle_center[1], mouse_circle_r*2);
 
-
+					// triangle
 					fill(204, 101, 192, 127);
 					noStroke();
 					triangle(mouse_circle[0][0], mouse_circle[0][1], mouse_circle[1][0], mouse_circle[1][1], mouse_circle[2][0], mouse_circle[2][1]);	
+				
+					// red point of triangle
+					stroke(255, 0, 0);
+					strokeWeight(10);
+					point(mouse_circle[0][0], mouse_circle[0][1]);
+					point(mouse_circle[1][0], mouse_circle[1][1]);
+					point(mouse_circle[2][0], mouse_circle[2][1]);
 				}
 			}
 		}
@@ -268,7 +316,9 @@ function swapTest(p, a, b) {
 		step_swap.push([]);
 		step_line.push([a, b].slice());
 		step_point.push(p.slice());
-		step_circle.push([[0 , 0], 0]);
+		var center = circleCenter(p, a, b);
+		var _p = distant(p, center);
+		step_circle.push([center, _p*2].slice());
 		step_d.push([]);
 
 		return;
@@ -478,9 +528,11 @@ function onOutEdge(a, b) {
 function helpPoints() {
 	p1 = [width/2, 0];
 	checked.push(p1);
-	p2 = [0, height-margin];
+	// p2 = [0, height-margin];
+	p2 = [width, height/2];
 	checked.push(p2);
-	p3 = [width, height-margin];
+	// p3 = [width, height-margin];
+	p3 = [0, height];
 	checked.push(p3);
 	outA = p1;
 	outB = p2;
@@ -497,17 +549,34 @@ function helpPoints() {
 
 function start() {
 	console.log("start");
-	fps = 3;
+	fps = prev_fps;
 	draw();
 }
 
 function pulse() {
 	console.log("pulse");
+	if (fps > 0) {
+		prev_fps = fps;
+	}
 	fps = 0;
 }
 
 function prev() {
 	console.log("prev");
+	if (prev_step_checked.length > 1) {
+		for (var i=0; i < 2; i++) {
+			steps++;
+			step_checked.unshift(prev_step_checked.pop());	
+			step_unchecked.unshift(prev_step_unchecked.pop());
+			step_edges.unshift(prev_step_edges.pop());
+			step_swap.unshift(prev_step_swap.pop());
+			step_point.unshift(prev_step_point.pop());
+			step_circle.unshift(prev_step_circle.pop());
+			step_d.unshift(prev_step_d.pop());
+			step_line.unshift(prev_step_line.pop());
+		}
+		redraw();
+	}
 }
 
 function next() {
@@ -515,6 +584,13 @@ function next() {
 	redraw();
 }
 
+function speedDown() {
+	fps--;
+}
+
+function speedUp() {
+	fps++;
+}
 
 function initial() {
 	clear();
@@ -529,16 +605,29 @@ function initial() {
 	step_edges = [];
 	step_swap = [];
 	step_point = [];
-	prev_edge = [];
+	// prev_edge = [];
 	step_circle = [];
 	step_d = [];
 	step_line = [];
+	prev_step_checked = [];
+	prev_step_unchecked = [];
+	prev_step_edges = [];
+	prev_step_swap = [];
+	prev_step_point = [];
+	// prev_prev_edge = [];
+	prev_step_circle = [];
+	prev_helper = [];
+	prev_step_d = [];
+	prev_step_line = [];
+
 	background(0);
 	strokeWeight(10);
 	stroke(255);
 	for (var i=0; i < input.value(); i++) {
-		var x = random(width/3, width/3 * 2);
-		var y = random(height/3, height/6 * 5);
+		// var x = random(width/3, width/3 * 2);
+		// var y = random(height/3, height/3 * 2);
+		var x = random(width/8 * 3, width/8 * 5);
+		var y = random(height/8 * 3, height/8 * 5);
 		point(x, y);
 		points.push([x, y]);
 		unchecked.push([x, y]);
