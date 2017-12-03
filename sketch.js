@@ -126,7 +126,10 @@ function setup(){
 	wiki.position(width + margin*2, title.height + (input.height + margin) * 10 + reference.height);
 
 	var goBack = createDiv("<a target='_blank' href='https://hsting.github.io/DelaunayTriangulations/'>Main page</a>");
-	goBack.position(width + margin*2, height);
+	goBack.position(width + margin*2, height-goBack.height-margin);
+
+	var cnt_visit = createDiv("<div align='center'><a href='http://www.free-website-hit-counter.com'><img src='http://www.free-website-hit-counter.com/c.php?d=9&id=109177&s=18' border='0' title='free website hit counter'></a><br / ><small></small></div>");
+	cnt_visit.position(width + margin*2, height);
 
 }
 
@@ -185,6 +188,7 @@ function draw() {
 		prev_step_point.push(this_step_point);
 		point(this_step_point[0], this_step_point[1]);
 
+		// draw illegal d point
 		this_step_d = step_d.shift();
 		prev_step_d.push(this_step_d);
 		if (this_step_d.length > 0) {
@@ -423,8 +427,25 @@ function swapTest(p, a, b) {
 	}
 	var d = findShare(p, a, b);
 	var swap_idx1;
-	if (inCircle(p, a, b, d)) {	// d violates the incircle test: d inside pab
 
+
+	if (inCircle(p, a, b, d)) {	// d violates the incircle test: d inside pab
+		if (helper.indexOf(d) > -1) {
+			steps++;
+			step_checked.push(checked.slice());
+			step_unchecked.push(unchecked.slice());
+			step_edges.push(edges.slice());
+			step_swap.push([]);
+			step_line.push([a, b].slice());
+			step_point.push(p.slice());
+			var center = circleCenter(p, a, b);
+			var _p = distant(p, center);
+			step_circle.push([center, _p*2].slice());
+			step_d.push(d.slice());
+			step_text_pt.push(['#'.concat((checked.length-3).toString(), ' point')]);
+			step_text_info.push('InCircle point is on helper triangle');
+			return;
+		}
 		console.log('SWAP!');
 
 		// delete old edge ab
@@ -779,10 +800,10 @@ function initial() {
 	strokeWeight(10);
 	stroke(init_pt_color);
 	for (var i=0; i < input.value(); i++) {
-		// var x = random(width/3, width/3 * 2);
-		// var y = random(height/3, height/3 * 2);
-		var x = random(width/8 * 3, width/8 * 5);
-		var y = random(height/8 * 3, height/8 * 5);
+		var x = random(width/3, width/3 * 2);
+		var y = random(height/3, height/3 * 2);
+		// var x = random(width/8 * 3, width/8 * 5);
+		// var y = random(height/8 * 3, height/8 * 5);
 		point(x, y);
 		points.push([x, y]);
 		unchecked.push([x, y]);
