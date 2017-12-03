@@ -2,8 +2,13 @@
 // modified helper triangle size
 // add speed up/ speed down
 // add prev function
+// add title
 
-var input, button, button2, button3, button4, button5, button6, button7;
+
+// TBdone: Bkgd color, zoom in/out
+
+
+var input, button, button2, button3, button4, button5, button6, button7, radio;
 var margin = 10;
 var points;
 var highest;
@@ -39,50 +44,106 @@ var prev_step_circle = [];
 var prev_step_d = [];
 var prev_step_line = [];
 
+var bkgd;
+var unchecked_color, checked_color, word_color, init_pt_color;
+var step_text_pt = [], step_text_info = [];
+var prev_step_text_pt = [], prev_step_text_info =[];
+
 function setup(){
 	
+	var title = createDiv('Delaunay Triangulations Pedagogical Aid&nbsp;&nbsp;<font size="2"><I>by <a href="mailto:sh3964@rit.edu"> Shih-Ting Huang</a></I></font>');
+	title.position(margin, margin);
 
-  	createCanvas(600, 600);
+  	var c = createCanvas(600, 600);
   	background(0);
+  	c.position(margin, title.height + margin);
+
+  	var inputText = createDiv('# of points:');
+	inputText.position(width+ margin*2, title.height + margin);
+
 	input = createInput();
-	input.position(width + margin, margin);
+	input.style('width', '60px');
+	input.position(width + margin*2, title.height + inputText.height + margin);
 
 	button = createButton('Submit');
-	button.position(width + margin, input.height + margin);
+	button.position(width + input.width+ margin*2, title.height+ inputText.height + margin);
 	button.mousePressed(initial);
+	button.style('width', '60px');
 
-	button2 = createButton('Pulse');
-	button2.position(width + margin , (input.height + margin) * 2);
-	button2.mousePressed(pulse);
+	button2 = createButton('Run');
+	button2.position(width + margin*2, title.height + (input.height + margin) * 2);
+	button2.mousePressed(start);
+	button2.style('width', '60px');
 
-	button3 = createButton('Start');
-	button3.position(width + margin , (input.height + margin) * 3);
-	button3.mousePressed(start);
+	// button3 = createButton('Pulse');
+	// button3.position(width + margin*2, title.height + (input.height + margin) * 3);
+	// button3.mousePressed(pulse);
+	// button3.style('width', '60px');
+
+
+	var step_title = createDiv('STEPS:');
+	step_title.position(width + margin*2, title.height +(input.height + margin) * 3);
 
 	button4 = createButton('Prev<<');
-	button4.position(width + margin , (input.height + margin) * 4);
+	button4.position(width + margin*2, title.height +(input.height + margin) * 4);
 	button4.mousePressed(prev);
+	button4.style('width', '60px');
 	
 	button5 = createButton('Next>>');
-	button5.position(width + margin , (input.height + margin) * 5);
+	button5.position(width + margin*2 + button4.width , title.height + (input.height + margin) * 4);
 	button5.mousePressed(next);
+	button5.style('width', '60px');
 
-	button6 = createButton('Speed down');
-	button6.position(width + margin , (input.height + margin) * 6);
+	var speed_title = createDiv('SPEED:');
+	speed_title.position(width + margin*2, title.height + (input.height + margin) * 5);
+
+	button6 = createButton('Down -');
+	button6.position(width + margin*2, title.height + (input.height + margin) * 6);
 	button6.mousePressed(speedDown);
+	button6.style('width', '60px');
 
-	button7 = createButton('Speed up');
-	button7.position(width + margin , (input.height + margin) * 7);
+	button7 = createButton('Up +');
+	button7.position(width + margin*2 + button6.width , title.height + (input.height + margin) * 6);
 	button7.mousePressed(speedUp);
+	button7.style('width', '60px');
+
+	var color_title = createDiv('BKGD COLOR:');
+	color_title.position(width + margin*2, title.height + (input.height + margin) * 7);
+
+	radio = createRadio();
+  	radio.option('black');
+  	radio.option('white');
+  	radio.position(width + margin*2, title.height + (input.height + margin) * 8);
+	radio.style('width', '60px');
+	radio.value('black');
+
+
+
+	var reference = createDiv('Reference:');
+	reference.position(width + margin*2, title.height + (input.height + margin) * 10);
+	//<a href="#deTri">Delaunay Triangulations</a>
+	var wiki = createDiv("<a target='_blank' href='https://en.wikipedia.org/wiki/Delaunay_triangulation'>Delaunay triangulation wikipedia</a>");
+	wiki.position(width + margin*2, title.height + (input.height + margin) * 10 + reference.height);
+
+	var goBack = createDiv("<a target='_blank' href='https://hsting.github.io/DelaunayTriangulations/'>Main page</a>");
+	goBack.position(width + margin*2, height);
 
 }
 
 
 function draw() {
+	// scale(1.1, 1.1);
+	// translate(-width/10, -height/10);
 	frameRate(fps);
 	// frameRate(button4.value());
-	background(0);
-	
+	bkgd = radio.value();
+	background(bkgd);
+	setColor(bkgd);
+	// background(0);
+	stroke('black');
+	strokeWeight(1);
+	noFill();
+	rect(0, 0, width-1, height-1);
 
 	if (step_unchecked.length > 0) {
 		console.log("THIS STEPS", steps);
@@ -90,7 +151,8 @@ function draw() {
 
 
 		// draw unchecked points
-		stroke(255, 255, 255, 100);
+		// stroke(255, 255, 255, 100);
+		stroke(unchecked_color);
 		strokeWeight(10);
 		this_step_unchecked = step_unchecked.shift();
 		prev_step_unchecked.push(this_step_unchecked);
@@ -100,7 +162,7 @@ function draw() {
 
 		// draw edges
 		strokeWeight(1);
-		stroke(255, 255, 0);
+		stroke(checked_color);
 		this_step_edges = step_edges.shift();
 		prev_step_edges.push(this_step_edges);
 		for (var i=0; i < this_step_edges.length; i++) {
@@ -108,7 +170,7 @@ function draw() {
 		}		
 
 		// draw checked points
-		stroke(255, 255, 0);
+		stroke(checked_color);
 		strokeWeight(10);
 		this_step_checked = step_checked.shift();
 		prev_step_checked.push(this_step_checked);
@@ -126,7 +188,7 @@ function draw() {
 		this_step_d = step_d.shift();
 		prev_step_d.push(this_step_d);
 		if (this_step_d.length > 0) {
-			strokeWeight(15);
+			strokeWeight(12);
 			point(this_step_d[0], this_step_d[1]);
 			// textSize(32);
 			// fill(0, 102, 153);
@@ -149,7 +211,7 @@ function draw() {
 		prev_step_circle.push(this_step_circle);
 		ellipse(this_step_circle[0][0], this_step_circle[0][1], this_step_circle[1])
 
-				// draw swap edge
+		// draw swap edge
 		strokeWeight(3);
 		stroke(255, 0, 0);
 		this_step_swap = step_swap.shift();
@@ -157,18 +219,35 @@ function draw() {
 		if (this_step_swap.length > 0) {
 			line(this_step_swap[0][0], this_step_swap[0][1], this_step_swap[1][0], this_step_swap[1][1]);
 			textSize(20);
-			// fill(0, 102, 153);
-			fill(100, 200, 255);
+			// fill(100, 200, 255);
+			fill(word_color);
 			noStroke();
 			textAlign(CENTER);
 			text("Flip", (this_step_swap[0][0]+this_step_swap[1][0])/2, (this_step_swap[0][1]+this_step_swap[1][1])/2);
 		}
 
+		// var step_text_pt, step_text_info;
+		// var prev_step_text_pt, prev_step_text_info;
+		fill(init_pt_color);
+		noStroke();
+		textAlign(LEFT);
+		textSize(18);
+
+		var this_step_text_pt = [];
+		this_step_text_pt = step_text_pt.shift();
+		prev_step_text_pt.push(this_step_text_pt);
+		text(this_step_text_pt, 2, 20);
+
+		var this_step_text_info = [];
+		this_step_text_info = step_text_info.shift();
+		prev_step_text_info.push(this_step_text_info);
+		text(this_step_text_info, 2, 40);
+
 
 	} else {
 
 		// draw checked points
-		stroke(255, 255, 0);
+		stroke(checked_color);
 		strokeWeight(10);
 		for (var i=0; i < checked.length; i++) {
 			point(checked[i][0], checked[i][1]);
@@ -181,7 +260,7 @@ function draw() {
 		}
 
 		// draw unchecked points
-		stroke(255, 255, 255, 100);
+		stroke(unchecked_color);
 		strokeWeight(10);
 		for (var i=0; i < unchecked.length; i++) {
 			point(unchecked[i][0], unchecked[i][1]);
@@ -259,13 +338,31 @@ function draw() {
 					point(mouse_circle[2][0], mouse_circle[2][1]);
 				}
 			}
+			
 		}
 
 		// console.log("checked", checked);
 		console.log("edges", edges);
 		console.log("unchecked", unchecked);
+		console.log("checked", checked);
 		console.log("triangles", triangles);
+
+		fill(init_pt_color);
+		noStroke();
+		textAlign(LEFT);
+		textSize(18);
+		if (checked.length > 0) {
+			if (helper.length > 0) {
+				text('#'.concat((checked.length-3).toString(), ' point'), 2, 20);
+			} else {
+				text('All points are done!', 2, 20);
+			}
+			
+		}
+		
 	}
+
+
 
 }
 
@@ -320,13 +417,16 @@ function swapTest(p, a, b) {
 		var _p = distant(p, center);
 		step_circle.push([center, _p*2].slice());
 		step_d.push([]);
-
+		step_text_pt.push(['#'.concat((checked.length-3).toString(), ' point')]);
+		step_text_info.push('Test edge is on helper triangle');
 		return;
 	}
 	var d = findShare(p, a, b);
 	var swap_idx1;
 	if (inCircle(p, a, b, d)) {	// d violates the incircle test: d inside pab
+
 		console.log('SWAP!');
+
 		// delete old edge ab
 		while (edgeIndex(a, b) >= 0){
 			swap_idx1 = edgeIndex(a, b);
@@ -345,6 +445,9 @@ function swapTest(p, a, b) {
 		triangles.push([p, a, d]);
 		triangles.push([p, d, b]);
 
+
+
+		//
 		steps++;
 		step_checked.push(checked.slice());
 		step_unchecked.push(unchecked.slice());
@@ -356,6 +459,9 @@ function swapTest(p, a, b) {
 		var last_circle = step_circle[step_circle.length - 1];
 		step_circle.push(last_circle.slice());
 		step_d.push(d.slice());
+
+		step_text_pt.push(['#'.concat((checked.length-3).toString(), ' point')]);
+		step_text_info.push('Edge Flipping');
 
 		swapTest(p, a, d);
 		swapTest(p, d, b);
@@ -402,6 +508,8 @@ function inCircle(p, a, b, d) {
 	step_point.push(p.slice());
 	step_circle.push([center, _p*2].slice());
 	step_d.push([]);
+	step_text_pt.push(['#'.concat((checked.length-3).toString(), ' point')]);
+	step_text_info.push('Any point in Circle?');	
 
 	if (_p > _d) {
 		steps++;
@@ -413,6 +521,8 @@ function inCircle(p, a, b, d) {
 		step_point.push(p.slice());
 		step_circle.push([center, _p*2].slice());
 		step_d.push(d.slice());
+		step_text_pt.push(['#'.concat((checked.length-3).toString(), ' point')]);
+		step_text_info.push('Found illegal point');	
 		return true;
 	} else {
 		return false;
@@ -548,9 +658,18 @@ function helpPoints() {
 
 
 function start() {
-	console.log("start");
-	fps = prev_fps;
-	draw();
+	if (fps == 0) {
+		console.log("start");
+		button2.html("Pulse");
+		fps = prev_fps;
+		draw();
+	} else {
+		console.log("pulse");
+		button2.html("Run");
+		prev_fps = fps;
+		fps = 0;
+	}
+	
 }
 
 function pulse() {
@@ -574,6 +693,10 @@ function prev() {
 			step_circle.unshift(prev_step_circle.pop());
 			step_d.unshift(prev_step_d.pop());
 			step_line.unshift(prev_step_line.pop());
+
+			step_text_pt.unshift(prev_step_text_pt.pop());
+			step_text_info.unshift(prev_step_text_info.pop());
+
 		}
 		redraw();
 	}
@@ -585,12 +708,36 @@ function next() {
 }
 
 function speedDown() {
-	fps--;
+	if (fps>0){
+		fps--;	
+	}
 }
 
 function speedUp() {
 	fps++;
 }
+
+function setColor(bkgd) { 
+	if (bkgd == 'black') {
+		unchecked_color = color(255, 255, 255, 100); 
+		checked_color = 'yellow';
+		word_color = color(100, 200, 255);
+		init_pt_color = 'white';
+		// circle_color, 
+		// flip_edge_color, 
+		// triangle_color;
+	} else if (bkgd == 'white'){
+		unchecked_color = color(0, 0, 0, 100); 
+		checked_color = 'black'; 
+		word_color = 'blue';
+		init_pt_color = 'black';
+		// circle_color, 
+		// flip_edge_color, 
+		// triangle_color;
+	}
+
+}
+
 
 function initial() {
 	clear();
@@ -609,6 +756,9 @@ function initial() {
 	step_circle = [];
 	step_d = [];
 	step_line = [];
+	step_text_pt = [];
+	step_text_info = [];
+
 	prev_step_checked = [];
 	prev_step_unchecked = [];
 	prev_step_edges = [];
@@ -620,9 +770,14 @@ function initial() {
 	prev_step_d = [];
 	prev_step_line = [];
 
-	background(0);
+	prev_step_text_pt = [];
+	prev_step_text_info = [];
+
+	bkgd = radio.value();
+	setColor(bkgd);
+	background(bkgd);
 	strokeWeight(10);
-	stroke(255);
+	stroke(init_pt_color);
 	for (var i=0; i < input.value(); i++) {
 		// var x = random(width/3, width/3 * 2);
 		// var y = random(height/3, height/3 * 2);
@@ -632,7 +787,10 @@ function initial() {
 		points.push([x, y]);
 		unchecked.push([x, y]);
 	}
-
+	stroke('black');
+	strokeWeight(1);
+	noFill();
+	rect(0, 0, width-1, height-1);
 	// // arbitray 3 points
 	// for (var i=0; i < 3; i++) {
 	// 	var x = random(width/3, width/3 * 2);
@@ -643,6 +801,7 @@ function initial() {
 	// }
 
 	helpPoints();	// create p1, p2, p3
+
 	console.log(points);
 }
 
