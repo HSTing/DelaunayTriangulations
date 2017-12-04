@@ -3,9 +3,7 @@
 // add speed up/ speed down
 // add prev function
 // add title
-
-
-// TBdone: Bkgd color, zoom in/out
+// Bkgd color, zoom in/out
 
 
 var input, button, button2, button3, button4, button5, button6, button7, radio;
