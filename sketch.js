@@ -112,22 +112,26 @@ function setup(){
   	radio.option('black');
   	radio.option('white');
   	radio.position(width + margin*2, title.height + (input.height + margin) * 8);
-	radio.style('width', '60px');
+	radio.style('width', '80px');
 	radio.value('black');
 
 
+	var goBack = createDiv("<a target='_blank' href='https://hsting.github.io/DelaunayTriangulations/'>Main page</a>");
+	goBack.position(width + margin*2, title.height + (input.height + margin) * 10);
+	// goBack.position(width + margin*2, height-goBack.height-margin);
 
 	var reference = createDiv('Reference:');
-	reference.position(width + margin*2, title.height + (input.height + margin) * 10);
-	//<a href="#deTri">Delaunay Triangulations</a>
+	reference.position(width + margin*2, title.height + (input.height + margin) * 11 + goBack.height);
+	// reference.position(width + margin*2, title.height + (input.height + margin) * 10);
+	//<a href="#deTri">Delaunay Triangulations</a>	
+
 	var wiki = createDiv("<a target='_blank' href='https://en.wikipedia.org/wiki/Delaunay_triangulation'>Delaunay triangulation wikipedia</a>");
-	wiki.position(width + margin*2, title.height + (input.height + margin) * 10 + reference.height);
+	wiki.position(width + margin*2, title.height + (input.height + margin) * 11 + goBack.height + reference.height);
+	// wiki.position(width + margin*2, title.height + (input.height + margin) * 10 + reference.height);
 
-	var goBack = createDiv("<a target='_blank' href='https://hsting.github.io/DelaunayTriangulations/'>Main page</a>");
-	goBack.position(width + margin*2, height-goBack.height-margin);
-
-// 	var cnt_visit = createDiv("<div align='center'><a href='http://www.free-website-hit-counter.com'><img src='http://www.free-website-hit-counter.com/c.php?d=9&id=109177&s=18' border='0' title='free website hit counter'></a><br / ><small></small></div>");
-// 	cnt_visit.position(width + margin*2, height);
+	
+	var cnt_visit = createDiv("<div align='center'><a href='http://www.free-website-hit-counter.com'><img src='http://www.free-website-hit-counter.com/c.php?d=9&id=109177&s=18' border='0' title='free website hit counter'></a><br / ><small></small></div>");
+	cnt_visit.position(width + margin*2, height);
 
 }
 
