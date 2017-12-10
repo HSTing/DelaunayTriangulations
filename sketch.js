@@ -3,7 +3,9 @@
 // add speed up/ speed down
 // add prev function
 // add title
-// Bkgd color, zoom in/out
+
+
+// TBdone: Bkgd color, zoom in/out
 
 
 var input, button, button2, button3, button4, button5, button6, button7, radio;
@@ -56,7 +58,7 @@ function setup(){
   	background(0);
   	c.position(margin, title.height + margin);
 
-  	var inputText = createDiv('# OF POINTS:');
+  	var inputText = createDiv('# of points:');
 	inputText.position(width+ margin*2, title.height + margin);
 
 	input = createInput();
@@ -79,7 +81,7 @@ function setup(){
 	// button3.style('width', '60px');
 
 
-	var step_title = createDiv('STEPS:');
+	var step_title = createDiv('Steps:');
 	step_title.position(width + margin*2, title.height +(input.height + margin) * 3);
 
 	button4 = createButton('Prev<<');
@@ -92,7 +94,7 @@ function setup(){
 	button5.mousePressed(next);
 	button5.style('width', '60px');
 
-	var speed_title = createDiv('SPEED:');
+	var speed_title = createDiv('Speed:');
 	speed_title.position(width + margin*2, title.height + (input.height + margin) * 5);
 
 	button6 = createButton('Down -');
@@ -105,7 +107,7 @@ function setup(){
 	button7.mousePressed(speedUp);
 	button7.style('width', '60px');
 
-	var color_title = createDiv('BKGD COLOR:');
+	var color_title = createDiv('Bkgd color:');
 	color_title.position(width + margin*2, title.height + (input.height + margin) * 7);
 
 	radio = createRadio();
@@ -130,7 +132,12 @@ function setup(){
 	// wiki.position(width + margin*2, title.height + (input.height + margin) * 10 + reference.height);
 
 	
-	var cnt_visit = createDiv("<div align='center'><a href='http://www.free-website-hit-counter.com'><img src='http://www.free-website-hit-counter.com/c.php?d=9&id=109177&s=18' border='0' title='free website hit counter'></a><br / ><small></small></div>");
+	var cnt_title = createDiv('Number of visitors');
+	cnt_title.position(width + margin*2, height - cnt_title.height);
+	// var cnt_visit = createDiv("<div align='center'><a href='http://www.free-website-hit-counter.com'><img src='http://www.free-website-hit-counter.com/c.php?d=9&id=109177&s=18' border='0' title='free website hit counter'></a><br / ><small></small></div>");
+	
+	// var cnt_visit = createDiv('<a href="http://www.reliablecounter.com" target="_blank"><img src="http://www.reliablecounter.com/count.php?page=hsting.github.io/DelaunayTriangulations/demo.html&digit=style/plain/12/&reloads=1" alt="" title="" border="0"></a><br />');
+	var cnt_visit = createDiv('<a href="http://www.reliablecounter.com" target="_blank"><img src="http://www.reliablecounter.com/count.php?page=hsting.github.io/DelaunayTriangulations/demo.html2&digit=style/plain/6/&reloads=1" alt="" title="" border="0"></a><br />');
 	cnt_visit.position(width + margin*2, height);
 
 }
