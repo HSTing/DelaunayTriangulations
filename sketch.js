@@ -56,7 +56,7 @@ function setup(){
   	background(0);
   	c.position(margin, title.height + margin);
 
-  	var inputText = createDiv('# of points:');
+  	var inputText = createDiv('# OF POINTS:');
 	inputText.position(width+ margin*2, title.height + margin);
 
 	input = createInput();
