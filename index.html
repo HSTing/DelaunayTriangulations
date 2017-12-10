@@ -1,3 +1,10 @@
+<!--
+  file:///Users/ShihTingHuang/Documents/01_SCHOOL/04_Co-op/website/index.html
+  the link
+//-->
+
+<!-- http://htmldog.com/guides/html/intermediate/ -->
+
 <html>
 
   <head>
@@ -12,10 +19,18 @@
 
   <body>
     <h1>Delaunay Triangulations Pedagogical Aid</h1>
-    <p>Name: <a href="mailto:sh3964@rit.edu"> Shih-Ting Huang</a></p>
+    <p><I>by <a href="mailto:sh3964@rit.edu"> Shih-Ting Huang</a></I></p>
+    
+    </br>
+    <p>
+      In this project, I created an interactive pedagogical aid of <strong>Delaunay Triangulations</strong>. The visualization shows how the <strong>incremental method</strong> works on a set of random points.<br>
+      <br>
 
-    <div style="background-color:#E8E8E8;">
-      <h2> Description of the project:</h2>
+      Interactive <a target='_blank' href="demo.html">demo page</a>.
+    </p>
+
+    <!-- <div style="background-color:#E8E8E8;">
+      <h2> Description of the project</h2>
     </div>
     <p>
       In this project, I created an interactive pedagogical aid of <a href="#deTri">Delaunay Triangulations</a>. The visualization shows how the <a href="#incre">incremental method</a> works on a set of random points.<br>
@@ -40,11 +55,11 @@
     <h3>Duties of each teammate:</h3>
     <p>
       Shih-Ting Huang: all<br><br>
-    </p>
+    </p> -->
 
 
     <div style="background-color:#E8E8E8;">
-      <h2> Background information and approach: </h2>
+      <h2> Background information and approach </h2>
     </div>
 
     <ul>
@@ -52,8 +67,8 @@
       <p>
         Delaunay triangulations maximize the minimum angle of all the angles of the triangles in the triangulation, and tend to avoid sliver triangles. </br>
         <p align="center">
-        <img src="https://hsting.github.io/DelaunayTriangulations/img/triangulation.png" alt="Triangulation" width="230" height="200" align="middle"> &nbsp;&nbsp;&rarr;&nbsp;&nbsp;
-        <img src="https://hsting.github.io/DelaunayTriangulations/img/delTri.png" alt="DelaunayTriangulation" width="230" height="200" align="middle">
+        <img src="img/triangulation.png" alt="Triangulation" width="230" height="200" align="middle"> <font size="30">&nbsp;&nbsp;&rarr;&nbsp;&nbsp;</font>
+        <img src="img/delTri.png" alt="DelaunayTriangulation" width="230" height="200" align="middle">
         </p></br>
       </p>
 
@@ -61,8 +76,8 @@
       <p>
         The algorithm is randomized incremental, so it adds the points in random order and it maintains a Delaunay triangulation of the current point set. In order to maintain legal Delaunay triangulation, it will perform the <strong>edge flipping</strong> operation when triangulation fails to satisfy the empty circle property.</br>
         <p align="center">
-        <img src="https://hsting.github.io/DelaunayTriangulations/img/flipEdge1.png" alt="flipEdge1" align="middle"> &nbsp;&nbsp;&rarr;&nbsp;&nbsp;
-        <img src="https://hsting.github.io/DelaunayTriangulations/img/flipEdge2.png" alt="flipEdge2" align="middle">
+        <img src="img/flipEdge1.png" alt="flipEdge1" align="middle"> <font size="30">&nbsp;&nbsp;&rarr;&nbsp;&nbsp;</font>
+        <img src="img/flipEdge2.png" alt="flipEdge2" align="middle">
         </p></br>
       </p>
 
@@ -70,43 +85,34 @@
     </ul>
 
     <div style="background-color:#E8E8E8;">
-      <h2> Pseudo-code: </h2>
+      <h2> Pseudo-code</h2>
     </div>
 
     <p>
-    <h3> DelaunayTriangulation(P) </h3>
-    Input: A set P of n points in the plane.<br>
-    Output: A Delaunay triangulation of P. <br>
-
-    <ol>
-      <li>Create a helper triangle contains all points.</li>
-
-      <li> <strong>for</strong> every point, p, in P <strong>do</strong> </li>
-
-      <li> &nbsp;&nbsp; Find the triangle abc contains p</li>
-
-      <li> &nbsp;&nbsp; Push edges (p, a), (p, b), (p, c) into triangluations.</li>
-
-      <li> &nbsp;&nbsp; SwapTest(p, a, b) </li>
-      <li> &nbsp;&nbsp; SwapTest(p, b, c) </li>
-      <li> &nbsp;&nbsp; SwapTest(p, c, a) </li>
-
-      <li> <strong>end for</strong> </li>
-      <li> Delete all edges connected to helper points from D(P).</li>
-      <li> <strong>return</strong> D(P)</li>
-    </ol>
-
-    <h3> SwapTest(p, a, b) </h3>
-    <ol>
-      <li> if (ab is an edge of helper triangle) return;</li>
-      <li> find the opposite vertex d, share same edge ab with p</li>
-
-      <li> if (d in the circle formed by p, a, b) { </li>
-      <li> &nbsp;&nbsp; Delete edge (a, b), and push edge(p, d) into D(P)</li>
-      <li> &nbsp;&nbsp; SwapTest(p, a, d)</li>
-      <li> &nbsp;&nbsp; SwapTest(p, d, b)</li>
-      <li> } </li>
-    </ol>
+    Input: a set P of n points in the plane.</br>
+    Output: a Delaunay triangulation of P. </br>
+    </br>
+    <strong>DelaunayTriangulation(P)</strong> {</br>
+    &nbsp;&nbsp;Create a helper triangle contains all points.</br>
+    &nbsp;&nbsp;for every point p in P {</br>
+    &nbsp;&nbsp;&nbsp;&nbsp; Find the triangle abc contains p</br>
+    &nbsp;&nbsp;&nbsp;&nbsp; Push edges (p, a), (p, b), (p, c) into the triangluation</br>
+    &nbsp;&nbsp;&nbsp;&nbsp; SwapTest(p, a, b) </br>
+    &nbsp;&nbsp;&nbsp;&nbsp; SwapTest(p, b, c) </br>
+    &nbsp;&nbsp;&nbsp;&nbsp; SwapTest(p, c, a) </br>
+    &nbsp;&nbsp;} </br>
+    &nbsp;&nbsp;Delete all edges connected to helper points from the triangluation</br>
+    &nbsp;&nbsp;return the triangluation</br>
+    }</br>
+    </br>
+    <strong> SwapTest(p, a, b) </strong> { </br>
+    &nbsp;&nbsp;if (ab is an edge of helper triangle) return;</br>
+    &nbsp;&nbsp;find the opposite vertex d, share same edge ab with p</br>
+    &nbsp;&nbsp;if (d in the circle formed by p, a, b) { </br>
+    &nbsp;&nbsp;&nbsp;&nbsp; Delete edge (a, b), and push edge(p, d) into the triangluation</br>
+    &nbsp;&nbsp;&nbsp;&nbsp; SwapTest(p, a, d)</br>
+    &nbsp;&nbsp;&nbsp;&nbsp; SwapTest(p, d, b)</br>
+    &nbsp;&nbsp;} </br>
     </p>
 
     <div style="background-color:#E8E8E8;">
@@ -125,13 +131,14 @@
     </p>
 
     <div style="background-color:#E8E8E8;">
-      <h2> Demo </h2>
+      <h2> References </h2>
     </div>
-    <p>
-      Let's go to the <a href="demo.html">demo page</a>!
-    </p>
-
-
+    <ol>
+      <li> <a target='_blank' href = "http://www.springer.com/us/book/9783662034279">Computational Geometry - Algorithms and Applications</a> (textbook) </li>
+      <li> <a target='_blank' href="https://en.wikipedia.org/wiki/Delaunay_triangulation"> Delaunay Triangulation</a> (Wikipedia)</li>
+      <li> <a target='_blank' href="https://p5js.org/">p5.js</a> (Javascript library)</li>
+    </ol>
+  </br>
 
   </body>
 </html>
