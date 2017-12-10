@@ -1,10 +1,3 @@
-<!--
-  file:///Users/ShihTingHuang/Documents/01_SCHOOL/04_Co-op/website/index.html
-  the link
-//-->
-
-<!-- http://htmldog.com/guides/html/intermediate/ -->
-
 <html>
 
   <head>
@@ -29,34 +22,6 @@
       Interactive <a target='_blank' href="demo.html">demo page</a>.
     </p>
 
-    <!-- <div style="background-color:#E8E8E8;">
-      <h2> Description of the project</h2>
-    </div>
-    <p>
-      In this project, I created an interactive pedagogical aid of <a href="#deTri">Delaunay Triangulations</a>. The visualization shows how the <a href="#incre">incremental method</a> works on a set of random points.<br>
-      <br>
-    </p>
-
-    <h3>List of references:</h3>
-    <ul>
-      <li> <a target='_blank' href = "http://www.springer.com/us/book/9783662034279">Computational Geometry - Algorithms and Applications</a> (textbook) </li>
-      <li> <a target='_blank' href="https://en.wikipedia.org/wiki/Delaunay_triangulation"> Wikipedia</a> </li>
-      <li> <a target='_blank' href="https://p5js.org/">p5.js</a> (Javascript library)</li>
-    </ul>
-
-    <h3>Timeline:</h3>
-    <ul>
-      <li> week 3 - 4: decide project topic, project web page proposal </li>
-      <li> week 5: algorithm research, interactive demonstration approach discussion </li>
-      <li> week 6 - 8: coding, debugging </li>
-      <li> week 9 -10: website building, presentation preparation </li>
-    </ul>
-
-    <h3>Duties of each teammate:</h3>
-    <p>
-      Shih-Ting Huang: all<br><br>
-    </p> -->
-
 
     <div style="background-color:#E8E8E8;">
       <h2> Background information and approach </h2>
@@ -65,7 +30,7 @@
     <ul>
       <h3 id="deTri"><li> Delaunay Triangulations </li></h3>
       <p>
-        Delaunay triangulations maximize the minimum angle of all the angles of the triangles in the triangulation, and tend to avoid sliver triangles. </br>
+        Delaunay triangulations (right figure) maximize the minimum angle of all the angles of the triangles in the triangulation, and tend to avoid sliver triangles (left figure). </br>
         <p align="center">
         <img src="https://hsting.github.io/DelaunayTriangulations/img/triangulation.png" alt="Triangulation" width="230" height="200" align="middle"> <font size="30">&nbsp;&nbsp;&rarr;&nbsp;&nbsp;</font>
         <img src="https://hsting.github.io/DelaunayTriangulations/img/delTri.png" alt="DelaunayTriangulation" width="230" height="200" align="middle">
@@ -74,11 +39,14 @@
 
       <h3 id="incre"><li> Incremental Method</li></h3>
       <p>
-        The algorithm is randomized incremental, so it adds the points in random order and it maintains a Delaunay triangulation of the current point set. In order to maintain legal Delaunay triangulation, it will perform the <strong>edge flipping</strong> operation when triangulation fails to satisfy the empty circle property.</br>
+        The algorithm is randomized incremental, so it adds the points in random order and it maintains a Delaunay triangulation of the current point set. In order to maintain legal Delaunay triangulation, it will perform the <strong>edge-flipping</strong> operation when triangulation fails to satisfy the empty circle property.</br>
+        </br>
+        For example, the figure below shows that the edge (B, C) is illegal since the point D is located in the circle formed by triangle ABC. In this situation, the algorithm will filp the edge (B, C) into edge (A, D).
         <p align="center">
         <img src="https://hsting.github.io/DelaunayTriangulations/img/flipEdge1.png" alt="flipEdge1" align="middle"> <font size="30">&nbsp;&nbsp;&rarr;&nbsp;&nbsp;</font>
         <img src="https://hsting.github.io/DelaunayTriangulations/img/flipEdge2.png" alt="flipEdge2" align="middle">
         </p></br>
+
       </p>
 
 
@@ -96,37 +64,36 @@
     &nbsp;&nbsp;Create a helper triangle contains all points.</br>
     &nbsp;&nbsp;for every point p in P {</br>
     &nbsp;&nbsp;&nbsp;&nbsp; Find the triangle abc contains p</br>
-    &nbsp;&nbsp;&nbsp;&nbsp; Push edges (p, a), (p, b), (p, c) into the triangluation</br>
+    &nbsp;&nbsp;&nbsp;&nbsp; Push edges (p, a), (p, b), (p, c) into the triangulation</br>
     &nbsp;&nbsp;&nbsp;&nbsp; SwapTest(p, a, b) </br>
     &nbsp;&nbsp;&nbsp;&nbsp; SwapTest(p, b, c) </br>
     &nbsp;&nbsp;&nbsp;&nbsp; SwapTest(p, c, a) </br>
     &nbsp;&nbsp;} </br>
-    &nbsp;&nbsp;Delete all edges connected to helper points from the triangluation</br>
-    &nbsp;&nbsp;return the triangluation</br>
+    &nbsp;&nbsp;Delete all edges connected to helper points from the triangulation</br>
+    &nbsp;&nbsp;return the triangulation</br>
     }</br>
     </br>
     <strong> SwapTest(p, a, b) </strong> { </br>
     &nbsp;&nbsp;if (ab is an edge of helper triangle) return;</br>
     &nbsp;&nbsp;find the opposite vertex d, share same edge ab with p</br>
     &nbsp;&nbsp;if (d in the circle formed by p, a, b) { </br>
-    &nbsp;&nbsp;&nbsp;&nbsp; Delete edge (a, b), and push edge(p, d) into the triangluation</br>
+    &nbsp;&nbsp;&nbsp;&nbsp; Delete edge (a, b), and push edge(p, d) into the triangulation</br>
     &nbsp;&nbsp;&nbsp;&nbsp; SwapTest(p, a, d)</br>
     &nbsp;&nbsp;&nbsp;&nbsp; SwapTest(p, d, b)</br>
     &nbsp;&nbsp;} </br>
     </p>
 
     <div style="background-color:#E8E8E8;">
-      <h2> Implementation Features: </h2>
+      <h2> Features of the Implementation </h2>
     </div>
     <p>
     <ul>
-      <li>Showing current algorithm infomation on left top side of the canvas</li>
-      <li>Entering the # of points from user</li>
-      <li>Providing two running modes: automatically run, and manually step by step</li>
-      <li>Algorithm animation speed is tunable</li>
-      <li>Providing two background colors, black and white, to user</li>
-      <li>Incluidng resource links on the demo page</li>
-      <li>After all points are done, user can click on each triangle to check the empty circle property </li>
+      <li>Users can enter numbers of points on the demo page.</li>
+      <li>The status of the algorithm is shown in top left corner of the canvas.</li>
+      <li>The interactive demo can perform automatically or manually step by step.</li>
+      <li>The speed of the algorithm is tunable.</li>
+      <li>The demo page provides two background colors, black and white, to meet users' preferences.</li>
+      <li>After Delaunay Triangulation is finished, users can click on each triangle to check the empty circle property.</li>
     </ul>
     </p>
 
